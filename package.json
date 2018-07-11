@@ -11,7 +11,8 @@
     "server:start": "pm2 start index.js",
     "server:restart": "pm2 restart all",
     "server:stop": "pm2 stop all",
-    "server:monitor": "pm2 monit"
+    "server:monitor": "pm2 monit",
+    "deploy": "npm run build && git add . && git commit -m 'automessage' && git push origin master"
   },
   "dependencies": {
     "ejs": "^2.5.6",
