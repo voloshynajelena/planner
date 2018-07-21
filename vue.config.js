@@ -1,11 +1,12 @@
 module.exports = {
     configureWebpack: {
-        devServer: {
+         
+    },
+    devServer: {
 
-            compress: true,
-        
-            disableHostCheck: true
-        
-         }     
-    }
+        compress: true,
+    
+        disableHostCheck: true
+    
+     }    
   }
