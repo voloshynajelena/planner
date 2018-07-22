@@ -3,6 +3,18 @@
     <img src="./assets/logo.png">
     <Planner msg="Lets go"/>
     <Content/>
+
+    <hr>
+
+
+    <div class="images">
+      <img 
+        v-for="(img, index) in images" 
+        :src="img.url" 
+        :width="img.width" 
+        height="auto" alt=""
+        :key='index'>
+    </div>
   </div>
 </template>
 
@@ -10,16 +22,50 @@
 import Planner from "./components/Planner.vue";
 import Content from "./components/Content.vue";
 
+/**
+ * url: `https://api.instagram.com/v1/users/self/media/recent`,
+        data: { access_token: this.token, count: this.count },
+ */
+
+/**
+ * axios.post('/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+ */
+
 export default {
   name: "app",
   components: {
     Planner,
     Content
   },
-  data: function(){
+  data: function() {
     return {
-      token: '1478292659.1677ed0.b49e74628f6f4c7e87975166a47a0f3a'
-    }
+      token: "1478292659.1677ed0.45b0a26e1e1a4c30a3a85e62931265e0",
+      api: "https://api.instagram.com/v1/users/self/media/recent",
+      images: []
+    };
+  },
+  mounted() {
+    this.axios
+      .get(this.api, {
+        params: {
+          access_token: this.token,
+          count: "15"
+        }
+      })
+      .then(response => {
+        // eslint-disable-next-line
+        console.log(response.data.data);
+        response.data.data.map(item => this.images.push(item.images.standard_resolution))
+      });
   }
 };
 </script>

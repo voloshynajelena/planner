@@ -15,10 +15,12 @@
     "deploy": "npm run build && git add . && git commit -m 'automessage' && git push origin master"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
     "pm2": "^3.0.0",
     "vue": "^2.5.16",
+    "vue-axios": "^2.1.2",
     "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
