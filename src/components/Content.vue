@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h5>{{ msg }}</h5>
     <input type="file" multiple v-on:change="getImages"/>
     <!-- <div class="square"
     v-for="(item, index) in images" :key='index'>
@@ -26,7 +26,7 @@ export default {
   name: "Content",
   data: function() {
     return {
-      msg: "App is here",
+      msg: "Download images:",
       images: []
     };
   },

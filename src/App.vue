@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <Planner msg="Lets go"/>
+    <Planner msg="Make your instagram awesome"/>
     <Content/>
 
     <hr>
@@ -71,6 +71,7 @@ export default {
 </script>
 
 <style>
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
