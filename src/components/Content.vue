@@ -7,10 +7,12 @@
     v-for="(item, index) in images" :key='index'>
       <img :src="item" alt="">
     </div> -->
-  <draggable v-model="images">
-    <transition-group>
-        <div v-for="(item, index) in images" :key="index">
-          <img :src="item" alt="">
+  <draggable v-model="images"  class="flex-grid">
+    <transition-group class="flex-col">
+        <div v-for="(item, index) in images" :key="index"  class="flex-item">
+          
+            <img :src="item" alt="">
+          
         </div>
     </transition-group>
 </draggable>

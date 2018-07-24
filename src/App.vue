@@ -4,16 +4,21 @@
     <Planner msg="Make your instagram awesome"/>
     <Content/>
 
-    <hr>
+    <div class="images flex-grid">
+      <div class="flex-col">
+        <div 
+          class="flex-item"
+          :key='index'
+          v-for="(img, index) in images" >
 
+          <img 
+            :src="img.url" 
+            :width="img.width" 
+            height="auto" 
+            alt="">
 
-    <div class="images">
-      <img 
-        v-for="(img, index) in images" 
-        :src="img.url" 
-        :width="img.width" 
-        height="auto" alt=""
-        :key='index'>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -79,5 +84,25 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.flex-grid {
+  display: flex;
+  justify-content: center;
+}
+.flex-col {
+  width: 30vw;
+  flex-wrap: wrap;
+  display: flex;
+}
+.flex-item {
+  width: 10vw;
+  height: 10vw;
+  border: 1.2px solid white;
+  box-sizing: border-box;
+  overflow: hidden;
+  vertical-align: center;
+}
+.flex-item img {
+  width: 100%;
 }
 </style>
