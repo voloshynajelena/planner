@@ -1,9 +1,9 @@
 <template>
   <div class="hello">
     <h5>{{ msg }}</h5>
-
+      <button class="button" @click="showPopup" v-if="!isLogin">Login</button>
       <input type="file" multiple v-on:change="getImages" name="file" id="file" class="inputfile" />
-      <label for="file" style="outline:0">+</label>    
+      <label for="file" v-show='isLogin' style="outline:0">+</label>    
     
   <draggable v-model="images"  class="flex-grid">
     <transition-group class="flex-col">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
+import draggable from "vuedraggable";
 
 export default {
   name: "Content",
@@ -27,15 +27,64 @@ export default {
     return {
       token: "1478292659.1677ed0.45b0a26e1e1a4c30a3a85e62931265e0",
       api: "https://api.instagram.com/v1/users/self/media/recent",
-      
+
       msg: "Download images:",
-      images: []
+      images: [],
+      isLogin: false
     };
   },
-  components:{
+  components: {
     draggable
   },
   methods: {
+    showPopup() {
+      const _this = this
+      const swal = this.$alert;
+      swal
+        .mixin({
+          input: "text",
+          confirmButtonText: "Next &rarr;",
+          showCancelButton: true,
+          progressSteps: ["1", "2"]
+        })
+        .queue([
+          {
+            title: "Login",
+            text: "Enter your login"
+          },
+          {
+            title: "Pass",
+            text: "Enter your Pass"
+          }
+        ])
+        .then(result => {
+          if (result.value) {
+            const pass = result.value[1];
+            const curentPass = "1111";
+            if (pass === curentPass) {
+              this.getInstaData();
+              this.isLogin = !this.isLogin
+              swal({
+                type: "success",
+                title: "All done!",
+                text: "Success",
+                confirmButtonText: "Lovely!"
+              });
+            } else {
+              swal({
+                type: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: "<a href>Why do I have this issue?</a>",
+                onClose() {
+                  _this.showPopup()
+                }
+              });
+            }
+          }
+        });
+    },
+
     getImages(e) {
       let files = e.target.files;
       let images = this.images;
@@ -50,25 +99,42 @@ export default {
     },
     getInstaData() {
       this.axios
-      .get(this.api, {
-        params: {
-          access_token: this.token,
-          count: "15"
-        }
-      })
-      .then(response => {
-        response.data.data.map(item => this.images.push(item.images.standard_resolution.url))
-      });
+        .get(this.api, {
+          params: {
+            access_token: this.token,
+            count: "15"
+          }
+        })
+        .then(response => {
+          response.data.data.map(item =>
+            this.images.push(item.images.standard_resolution.url)
+          );
+        });
     }
-  },
-  mounted() {
-    this.getInstaData()
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+button, .button {
+    background-color: #3085d6;
+    color: #fff;
+    border: 0;
+    box-shadow: none;
+    font-size: 1.125em;
+    font-weight: 500;
+    border-radius: .1875em;
+    padding: .9em 2.1875em;
+    cursor: pointer;
+    white-space: nowrap;
+}
+button:active, .button:active {
+    background-color: #236bb0;
+}
+.button:hover {
+  background-color: #297dce;
+}
 
 h3 {
   margin: 40px 0 0;
@@ -115,46 +181,47 @@ a {
   width: 100%;
 }
 .inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
 .inputfile + label {
-    font-size: 2.25em;
-    font-weight: 400;
-    color: #3c3c3c;
-    border: 1px solid;
-    padding: 5px;
-    margin: 0 0 20px 0;
-    line-height: 0.7em;
-    border-radius: 23%;
-    display: inline-block;
-    transition: 0.1s;
+  font-size: 2.25em;
+  font-weight: 400;
+  color: #3c3c3c;
+  border: 1px solid;
+  padding: 5px;
+  margin: 0 0 20px 0;
+  line-height: 0.7em;
+  border-radius: 23%;
+  display: inline-block;
+  transition: 0.1s;
   outline: 0;
 }
 .inputfile:focus + label,
 .inputfile + label:hover {
   outline: 0;
-        background-color: #bababae0;
-    color: white;
-    border-color: #bababae0;
+  background-color: #bababae0;
+  color: white;
+  border-color: #bababae0;
 }
-label, input:focus, input:active {
+label,
+input:focus,
+input:active {
   outline: 0;
 }
 
-
 .inputfile + label {
-	cursor: pointer; /* "hand" cursor */
+  cursor: pointer; /* "hand" cursor */
 }
 .inputfile:focus + label {
-	outline: 1px dotted #000;
-	outline: -webkit-focus-ring-color auto 5px;
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
 }
 .inputfile + label * {
-	pointer-events: none;
+  pointer-events: none;
 }
 </style>
