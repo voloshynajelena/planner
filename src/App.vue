@@ -100,8 +100,8 @@ export default {
   border: 1.2px solid white;
   box-sizing: border-box;
   overflow: hidden;
-  vertical-align: center;
-  align-items: center
+  display: flex;
+  align-items: center;
 }
 .flex-item img {
   width: 100%;
