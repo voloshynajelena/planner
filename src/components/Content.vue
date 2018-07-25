@@ -1,17 +1,10 @@
-/* eslint-disable */
 <template>
   <div class="hello">
     <h5>{{ msg }}</h5>
 
-
-          <input type="file" multiple v-on:change="getImages" name="file" id="file" class="inputfile" />
-          <label for="file">+</label>
+      <input type="file" multiple v-on:change="getImages" name="file" id="file" class="inputfile" />
+      <label for="file" style="outline:0">+</label>    
     
-    
-    <!-- <div class="square"
-    v-for="(item, index) in images" :key='index'>
-      <img :src="item" alt="">
-    </div> -->
   <draggable v-model="images"  class="flex-grid">
     <transition-group class="flex-col">
         <div v-for="(item, index) in images" :key="index"  class="flex-item">
@@ -26,13 +19,15 @@
 </template>
 
 <script>
-  import draggable from 'vuedraggable'
-
+import draggable from 'vuedraggable'
 
 export default {
   name: "Content",
   data: function() {
     return {
+      token: "1478292659.1677ed0.45b0a26e1e1a4c30a3a85e62931265e0",
+      api: "https://api.instagram.com/v1/users/self/media/recent",
+      
       msg: "Download images:",
       images: []
     };
@@ -42,29 +37,39 @@ export default {
   },
   methods: {
     getImages(e) {
-      // console.log(e.target.files)
       let files = e.target.files;
       let images = this.images;
 
       for (let i = 0; i < files.length; i += 1) {
         var reader = new FileReader();
         reader.readAsDataURL(files[i]);
-
         reader.onload = function(e) {
-          images.push(e.target.result);
+          images.unshift(e.target.result);
         };
       }
+    },
+    getInstaData() {
+      this.axios
+      .get(this.api, {
+        params: {
+          access_token: this.token,
+          count: "15"
+        }
+      })
+      .then(response => {
+        response.data.data.map(item => this.images.push(item.images.standard_resolution.url))
+      });
     }
+  },
+  mounted() {
+    this.getInstaData()
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-img {
-  width: 100px;
-  height: 100px;
-}
+<style>
+
 h3 {
   margin: 40px 0 0;
 }
@@ -79,8 +84,35 @@ li {
 a {
   color: #42b983;
 }
-input:focus {
-  outline: none;
+
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+.flex-grid {
+  display: flex;
+  justify-content: center;
+}
+.flex-col {
+  width: 30vw;
+  flex-wrap: wrap;
+  display: flex;
+}
+.flex-item {
+  width: 10vw;
+  height: 10vw;
+  border: 1.2px solid white;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.flex-item img {
+  width: 100%;
 }
 .inputfile {
 	width: 0.1px;
@@ -101,13 +133,20 @@ input:focus {
     border-radius: 23%;
     display: inline-block;
     transition: 0.1s;
+  outline: 0;
 }
 .inputfile:focus + label,
 .inputfile + label:hover {
+  outline: 0;
         background-color: #bababae0;
     color: white;
     border-color: #bababae0;
 }
+label, input:focus, input:active {
+  outline: 0;
+}
+
+
 .inputfile + label {
 	cursor: pointer; /* "hand" cursor */
 }
