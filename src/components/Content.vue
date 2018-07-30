@@ -3,7 +3,7 @@
     <h5>{{ msg }}</h5>
       <button class="button" @click="showPopup" v-if="!isLogin">Login</button>
       <input type="file" multiple v-on:change="getImages" name="file" id="file" class="inputfile" />
-      <label for="file" v-show='isLogin' style="outline:0">+</label>    
+      <label for="file" v-show='isLogin' >+</label>    
     
   <draggable v-model="images"  class="flex-grid">
     <transition-group class="flex-col">
@@ -199,7 +199,7 @@ a {
   border-radius: 23%;
   display: inline-block;
   transition: 0.1s;
-  outline: 0;
+  outline: none !important;
 }
 .inputfile:focus + label,
 .inputfile + label:hover {
