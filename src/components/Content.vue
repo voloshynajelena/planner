@@ -27,7 +27,7 @@ export default {
     return {
       token: "1478292659.1677ed0.45b0a26e1e1a4c30a3a85e62931265e0",
       api: "https://api.instagram.com/v1/users/self/media/recent",
-
+      url: "https://api-insta-planner.herokuapp.com/",
       msg: "Download images:",
       images: [],
       isLogin: false
@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     showPopup() {
-      const _this = this
+      const _this = this;
       const swal = this.$alert;
       swal
         .mixin({
@@ -58,31 +58,55 @@ export default {
           }
         ])
         .then(result => {
-          if (result.value) {
-            const pass = result.value[1];
-            const curentPass = "1111";
-            if (pass === curentPass) {
-              this.getInstaData();
-              this.isLogin = !this.isLogin
-              swal({
-                type: "success",
-                title: "All done!",
-                text: "Success",
-                confirmButtonText: "Lovely!"
-              });
-            } else {
-              swal({
-                type: "error",
-                title: "Oops...",
-                text: "Something went wrong!",
-                footer: "<a href>Why do I have this issue?</a>",
-                onClose() {
-                  _this.showPopup()
+          const login = result.value[0];
+          const pass = result.value[1];
+
+          swal.showLoading();
+
+          if (!!login && !!pass) {
+            this.authorization({ login, pass })
+              .then(function(res) {
+                res = res || {};
+
+                const isSuccess = res.data.autorization === "success";
+
+                if (isSuccess) {
+                  swal({
+                    type: "success",
+                    title: "All done!",
+                    text: "Success",
+                    confirmButtonText: "Lovely!"
+                  });
+
+                  _this.isLogin = true;
+                  _this.getInstaData();
+                } else {
+                  swal({
+                    type: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    footer: "<a href>Why do I have this issue?</a>",
+                    onClose() {
+                      _this.showPopup();
+                    }
+                  });
                 }
+              })
+              .catch(res => {
+                swal.showValidationError(`Request failed: ${res}`);
               });
-            }
           }
+        })
+        .catch(res => {
+          swal.showValidationError(`Request failed: ${res}`);
         });
+    },
+
+    authorization({ login, pass }) {
+      return this.axios.post(
+        this.url + "login",
+        JSON.stringify({ login: login, pass: pass })
+      );
     },
 
     getImages(e) {
@@ -117,20 +141,22 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-button, .button {
-    background-color: #3085d6;
-    color: #fff;
-    border: 0;
-    box-shadow: none;
-    font-size: 1.125em;
-    font-weight: 500;
-    border-radius: .1875em;
-    padding: .9em 2.1875em;
-    cursor: pointer;
-    white-space: nowrap;
+button,
+.button {
+  background-color: #3085d6;
+  color: #fff;
+  border: 0;
+  box-shadow: none;
+  font-size: 1.125em;
+  font-weight: 500;
+  border-radius: 0.1875em;
+  padding: 0.9em 2.1875em;
+  cursor: pointer;
+  white-space: nowrap;
 }
-button:active, .button:active {
-    background-color: #236bb0;
+button:active,
+.button:active {
+  background-color: #236bb0;
 }
 .button:hover {
   background-color: #297dce;
